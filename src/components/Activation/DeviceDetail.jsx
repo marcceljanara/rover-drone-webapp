@@ -33,7 +33,7 @@ const DeviceDetail = () => {
   const fetchDevice = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      const res = await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}`, {
+      const res = await fetch(`http://localhost:5000/v1/devices/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: 'application/json',
@@ -58,7 +58,7 @@ const DeviceDetail = () => {
     const token = localStorage.getItem('accessToken');
     setLoadingDaily(true);
     try {
-      const res = await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}/daily`, {
+      const res = await fetch(`http://localhost:5000/v1/devices/${id}/daily`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: 'application/json',
@@ -83,7 +83,7 @@ const DeviceDetail = () => {
   const updateDeviceStatus = async (status) => {
     const token = localStorage.getItem('accessToken');
     try {
-      const res = await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}/control`, {
+      const res = await fetch(`http://localhost:5000/v1/devices/${id}/control`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -107,7 +107,7 @@ const DeviceDetail = () => {
     const token = localStorage.getItem('accessToken');
     const endpoint = type === 'sensor' ? 'mqttsensor' : 'mqttcontrol';
     try {
-      const res = await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}/${endpoint}`, {
+      const res = await fetch(`http://localhost:5000/v1/devices/${id}/${endpoint}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -151,7 +151,7 @@ const DeviceDetail = () => {
           <div className="detail-item"><strong>Status:</strong><div className={`status-badge ${localStatus.toLowerCase()}`}>{localStatus}</div></div>
           <div className="detail-item"><strong>Rental ID:</strong><div className="detail-value">{device.rental_id || 'Tidak tersedia'}</div></div>
           <div className="detail-item"><strong>Last Issue:</strong><div className="detail-value">{device.last_reported_issue || 'Tidak ada'}</div></div>
-          <div className="detail-item"><strong>Last Active:</strong><div className="detail-value">{device.last_active}</div></div>
+          <div className="detail-item"><strong>Total Active:</strong><div className="detail-value">{device.last_active}</div></div>
           <div className="detail-item">
             <strong>Sensor Topic:</strong>
             <div className="topic-with-button">

@@ -57,7 +57,7 @@ const Penyewaan = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const deviceRes = await fetch('https://dev-api.xsmartagrichain.site/v1/devices?scope=available', {
+        const deviceRes = await fetch('http://localhost:5000/v1/devices?scope=available', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const deviceData = await deviceRes.json();
@@ -67,7 +67,7 @@ const Penyewaan = () => {
       }
 
       try {
-        const sensorRes = await fetch('https://dev-api.xsmartagrichain.site/v1/sensors/available', {
+        const sensorRes = await fetch('http://localhost:5000/v1/sensors/available', {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         });
         const sensorData = await sensorRes.json();
@@ -85,7 +85,7 @@ const Penyewaan = () => {
   useEffect(() => {
   const fetchAddresses = async () => {
     try {
-      const res = await fetch("https://dev-api.xsmartagrichain.site/v1/users/addresses", {
+      const res = await fetch("http://localhost:5000/v1/users/addresses", {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -128,7 +128,7 @@ const handleSewa = async () => {
 
   setLoading(true);
   try {
-    const response = await fetch('https://dev-api.xsmartagrichain.site/v1/rentals', {
+    const response = await fetch('http://localhost:5000/v1/rentals', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -165,7 +165,7 @@ const handleSewa = async () => {
 
   // 👉 URL‑encode kelurahan
   const url =
-    "https://dev-api.xsmartagrichain.site/v1/shipping-cost" +
+    "http://localhost:5000/v1/shipping-cost" +
     "?subdistrictName=" +
     encodeURIComponent(address.kelurahan);
 

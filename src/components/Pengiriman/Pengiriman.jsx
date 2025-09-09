@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Pengiriman.css";
 
-const API = "https://dev-api.xsmartagrichain.site/v1/shipments";
+const API = "http://localhost:5000/v1/shipments";
 const itemsPerPage = 5;
 
 export default function Shipments() {
@@ -25,7 +25,13 @@ export default function Shipments() {
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || "Gagal memuat pengiriman");
-        setShipments(data.data.shipments || []);
+
+        // Urutkan dari terbaru ke terlama
+        const sortedShipments = (data.data.shipments || []).sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+
+        setShipments(sortedShipments);
       } catch (e) {
         setError(e.message);
         setShipments([]);
@@ -123,7 +129,7 @@ export default function Shipments() {
         </button>
         <span>Halaman {currentPage} dari {totalPages || 1}</span>
         <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
-          →
+          → 
         </button>
       </div>
     </div>

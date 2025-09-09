@@ -22,20 +22,23 @@ const Reports = () => {
   const fetchReports = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.site/v1/reports', {
+      const response = await fetch('http://localhost:5000/v1/reports', {
         method: 'GET',
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Gagal memuat data laporan');
 
-      const data = result.data.reports.map((report) => ({
-        id: report.id,
-        reportDate: report.report_date,
-        totalTransactions: report.total_transactions,
-        startDate: report.start_date,
-        endDate: report.end_date,
-      }));
+      // Ambil data + sortir berdasarkan tanggal laporan terbaru
+      const data = (result.data.reports || [])
+        .map((report) => ({
+          id: report.id,
+          reportDate: report.report_date,
+          totalTransactions: report.total_transactions,
+          startDate: report.start_date,
+          endDate: report.end_date,
+        }))
+        .sort((a, b) => new Date(b.reportDate) - new Date(a.reportDate));
 
       setReports(data);
     } catch (error) {
@@ -50,7 +53,7 @@ const Reports = () => {
   const handleAdd = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.site/v1/reports', {
+      const response = await fetch('http://localhost:5000/v1/reports', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -80,7 +83,7 @@ const Reports = () => {
   const handleDelete = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/reports/${deleteId}`, {
+      const response = await fetch(`http://localhost:5000/v1/reports/${deleteId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${accessToken}`,

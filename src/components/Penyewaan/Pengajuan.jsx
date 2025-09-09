@@ -27,6 +27,19 @@ function KelolaPenyewaan() {
     { key: 'action', label: 'Aksi' },
   ];
 
+  // Mapping status API → bahasa Indonesia
+  const statusMap = {
+    active: 'Sedang disewa',
+    pending: 'Menunggu konfirmasi',
+    cancelled: 'Dibatalkan',
+    completed: 'Selesai',
+    'awaiting-return': 'Menunggu Pengembalian',
+  };
+
+  // Fungsi helper untuk sort data terbaru -> lama
+  const sortByStartDateDesc = (arr) =>
+    [...arr].sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+
   useEffect(() => {
     if (!token) {
       setError('Token tidak ditemukan. Silakan login terlebih dahulu.');
@@ -36,7 +49,7 @@ function KelolaPenyewaan() {
 
     const fetchRentals = async () => {
       try {
-        const response = await fetch('https://dev-api.xsmartagrichain.site/v1/rentals', {
+        const response = await fetch('http://localhost:5000/v1/rentals', {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -45,7 +58,8 @@ function KelolaPenyewaan() {
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || 'Gagal memuat data penyewaan.');
-        setData(result.data?.rentals || []);
+
+        setData(sortByStartDateDesc(result.data?.rentals || []));
         setError('');
       } catch (err) {
         setError(err.message);
@@ -69,8 +83,8 @@ function KelolaPenyewaan() {
     try {
       const isAdmin = role === 'admin';
       const url = isAdmin
-        ? `https://dev-api.xsmartagrichain.site/v1/rentals/${id}`
-        : `https://dev-api.xsmartagrichain.site/v1/rentals/${id}/cancel`;
+        ? `http://localhost:5000/v1/rentals/${id}`
+        : `hhttp://localhost:5000/v1/rentals/${id}/cancel`;
 
       const options = {
         method: 'PUT',
@@ -89,11 +103,13 @@ function KelolaPenyewaan() {
       setShowNotification(true);
 
       setData((prev) =>
-        isAdmin
-          ? prev.filter((item) => item.id !== id)
-          : prev.map((item) =>
-              item.id === id ? { ...item, rental_status: 'cancelled' } : item
-            )
+        sortByStartDateDesc(
+          isAdmin
+            ? prev.filter((item) => item.id !== id)
+            : prev.map((item) =>
+                item.id === id ? { ...item, rental_status: 'cancelled' } : item
+              )
+        )
       );
     } catch (err) {
       setNotification(err.message);
@@ -105,7 +121,7 @@ function KelolaPenyewaan() {
     if (!token) return;
     try {
       const response = await fetch(
-        `https://dev-api.xsmartagrichain.site/v1/rentals/${id}/status`,
+        `http://localhost:5000/v1/rentals/${id}/status`,
         {
           method: 'PUT',
           headers: {
@@ -122,8 +138,10 @@ function KelolaPenyewaan() {
       setShowNotification(true);
 
       setData((prev) =>
-        prev.map((item) =>
-          item.id === id ? { ...item, rental_status: 'completed' } : item
+        sortByStartDateDesc(
+          prev.map((item) =>
+            item.id === id ? { ...item, rental_status: 'completed' } : item
+          )
         )
       );
     } catch (err) {
@@ -213,7 +231,7 @@ function KelolaPenyewaan() {
                         return (
                           <td key="status" data-label={label}>
                             <span className={`status-badge status-${item.rental_status}`}>
-                              {item.rental_status}
+                              {statusMap[item.rental_status] || item.rental_status}
                             </span>
                           </td>
                         );

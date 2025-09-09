@@ -20,14 +20,13 @@ const Payments = () => {
 
   const navigate = useNavigate();
 
+  // Ambil data pembayaran
   const fetchPayments = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.site/v1/payments', {
+      const response = await fetch('http://localhost:5000/v1/payments', {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       if (!response.ok) {
@@ -36,12 +35,16 @@ const Payments = () => {
       }
 
       const result = await response.json();
-      const payments = result.data.payments.map((payment) => ({
-        id: payment.id?.toString() || '',
-        rentalId: payment.rental_id?.toString() || 'null',
-        amount: payment.amount,
-        payment_status: payment.payment_status?.toString() || '',
-      }));
+
+      // Mapping dan urutkan dari terbaru ke terlama
+      const payments = result.data.payments
+        .map(payment => ({
+          id: payment.id?.toString() || '',
+          rentalId: payment.rental_id?.toString() || 'null',
+          amount: payment.amount,
+          payment_status: payment.payment_status?.toString() || '',
+        }))
+        .sort((a, b) => Number(b.id) - Number(a.id)); // urutkan descending
 
       setData(payments);
     } catch (error) {
@@ -61,21 +64,16 @@ const Payments = () => {
   const handleSubmit = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/payments/${selectedPaymentId}`, {
+      const response = await fetch(`http://localhost:5000/v1/payments/${selectedPaymentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({
-          paymentStatus: formData.paymentStatus,
-          paymentMethod: formData.paymentMethod,
-          transactionDescription: formData.transactionDescription,
-        }),
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
-
       if (!response.ok) throw new Error(result.message);
 
       setNotification(result.message);
@@ -84,7 +82,6 @@ const Payments = () => {
     } catch (error) {
       setNotification(`Error: ${error.message}`);
     }
-
     setTimeout(() => setNotification(null), 3000);
   };
 
@@ -112,7 +109,7 @@ const Payments = () => {
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
-            setCurrentPage(1); // reset ke halaman 1 saat pencarian
+            setCurrentPage(1);
           }}
         />
       </div>
@@ -179,12 +176,8 @@ const Payments = () => {
       <div className="footer">
         <span className="page-number">Halaman {currentPage} dari {totalPages}</span>
         <div className="pagination">
-          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-            ←
-          </button>
-          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
-            →
-          </button>
+          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>←</button>
+          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>→</button>
         </div>
       </div>
 

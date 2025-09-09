@@ -44,7 +44,7 @@ const Addresses = () => {
   const fetchAddresses = useCallback(async () => {
     try {
       const res = await fetch(
-        "https://dev-api.xsmartagrichain.site/v1/users/addresses",
+        "http://localhost:5000/v1/users/addresses",
         { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
       );
       const data = await res.json();
@@ -57,7 +57,7 @@ const Addresses = () => {
   const fetchAddressDetail = async (id) => {
     try {
       const res = await fetch(
-        `https://dev-api.xsmartagrichain.site/v1/users/addresses/${id}`,
+        `http://localhost:5000/v1/users/addresses/${id}`,
         { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
       );
       const data = await res.json();
@@ -122,8 +122,8 @@ const handleSubmit = async (e) => {
   try {
     const method = editId ? "PUT" : "POST";
     const url = editId
-      ? `https://dev-api.xsmartagrichain.site/v1/users/addresses/${editId}`
-      : "https://dev-api.xsmartagrichain.site/v1/users/addresses";
+      ? `http://localhost:5000/v1/users/addresses/${editId}`
+      : "http://localhost:5000/v1/users/addresses";
 
     const res = await fetch(url, {
       method,
@@ -153,7 +153,7 @@ const handleSubmit = async (e) => {
 const setAsDefault = async (id) => {
   try {
     const res = await fetch(
-      `https://dev-api.xsmartagrichain.site/v1/users/addresses/${id}`,
+      `http://localhost:5000/v1/users/addresses/${id}`,
       {
         method: "PATCH",
         headers: {
@@ -176,7 +176,7 @@ const handleDeleteAddress = async () => {
   if (!deleteId) return;
   try {
     const res = await fetch(
-      `https://dev-api.xsmartagrichain.site/v1/users/addresses/${deleteId}`,
+      `http://localhost:5000/v1/users/addresses/${deleteId}`,
       {
         method: "DELETE",
         headers: {

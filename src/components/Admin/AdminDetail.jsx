@@ -21,7 +21,7 @@ const AdminDetail = () => {
   useEffect(() => {
     const fetchUserDetail = async () => {
       try {
-        const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/admin/${id}`, {
+        const response = await fetch(`http://localhost:5000/v1/admin/${id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         const result = await response.json();
@@ -43,7 +43,7 @@ const AdminDetail = () => {
     }
 
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/admin/${id}`, {
+      const response = await fetch(`http://localhost:5000/v1/admin/${id}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -68,7 +68,7 @@ const AdminDetail = () => {
 
   const handleDeleteUser = async () => {
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/admin/${id}`, {
+      const response = await fetch(`http://localhost:5000/v1/admin/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${accessToken}`,

@@ -26,7 +26,7 @@ const Admin = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/admin?limit=100`, {
+      const response = await fetch(`http://localhost:5000/v1/admin?limit=100`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
@@ -66,7 +66,7 @@ const Admin = () => {
     }
 
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.site/v1/admin', {
+      const response = await fetch('http://localhost:5000/v1/admin', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,

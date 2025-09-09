@@ -13,7 +13,7 @@ const DataDetail = () => {
   const [limitsData, setLimitsData] = useState([]);
 
   const fetchSensorChart = () => {
-    fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}/sensors/intervals?interval=${interval}`, {
+    fetch(`http://localhost:5000/v1/devices/${id}/sensors/intervals?interval=${interval}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     })
       .then(res => res.json())
@@ -26,7 +26,7 @@ const DataDetail = () => {
   };
 
   const fetchSensorLimits = () => {
-    fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}/sensors/limits?limit=5`, {
+    fetch(`http://localhost:5000/v1/devices/${id}/sensors/limits?limit=5`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     })
       .then(res => res.json())
@@ -37,7 +37,7 @@ const DataDetail = () => {
   };
 
   const handleDownloadCSV = () => {
-    fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}/sensors/downloads?interval=${interval}`, {
+    fetch(`http://localhost:5000/v1/devices/${id}/sensors/downloads?interval=${interval}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     })
       .then(res => {

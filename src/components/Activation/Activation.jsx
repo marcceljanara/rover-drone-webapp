@@ -15,11 +15,20 @@ const Activation = () => {
   const role = localStorage.getItem('role');
   const isUser = role === 'user';
 
+  // Fungsi untuk mengurutkan data terbaru -> lama
+  const sortByLastActive = (devices) => {
+    return devices.sort((a, b) => {
+      const dateA = new Date(a.lastActive);
+      const dateB = new Date(b.lastActive);
+      return dateB - dateA; // terbaru di atas
+    });
+  };
+
   useEffect(() => {
     const fetchDevices = async () => {
       const token = localStorage.getItem('accessToken');
       try {
-        const res = await fetch('https://dev-api.xsmartagrichain.site/v1/devices', {
+        const res = await fetch('http://localhost:5000/v1/devices', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const result = await res.json();
@@ -30,7 +39,7 @@ const Activation = () => {
           lastIssue: device.last_reported_issue || '-',
           lastActive: device.last_active || '-',
         }));
-        setData(devices);
+        setData(sortByLastActive(devices));
       } catch (err) {
         alert(`Gagal memuat data: ${err.message}`);
       }
@@ -44,7 +53,7 @@ const Activation = () => {
   const handleStatusChange = async (id, newStatus) => {
     const token = localStorage.getItem('accessToken');
     try {
-      await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}/status`, {
+      await fetch(`http://localhost:5000/v1/devices/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +63,9 @@ const Activation = () => {
       });
       setNotification(`Status perangkat ${id} diubah jadi ${newStatus}`);
       setTimeout(() => setNotification(null), 3000);
-      setData(prev => prev.map(item => item.id === id ? { ...item, status: newStatus } : item));
+      setData(prev => sortByLastActive(
+        prev.map(item => item.id === id ? { ...item, status: newStatus } : item)
+      ));
       setEditingId(null);
     } catch (err) {
       alert(`Gagal ubah status: ${err.message}`);
@@ -64,13 +75,13 @@ const Activation = () => {
   const handleDelete = async (id) => {
     const token = localStorage.getItem('accessToken');
     try {
-      await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}`, {
+      await fetch(`http://localhost:5000/v1/devices/${id}`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotification(`Perangkat ${id} berhasil dihapus`);
       setTimeout(() => setNotification(null), 3000);
-      setData(prev => prev.filter(item => item.id !== id));
+      setData(prev => sortByLastActive(prev.filter(item => item.id !== id)));
     } catch (err) {
       alert(`Gagal menghapus: ${err.message}`);
     }
@@ -79,7 +90,7 @@ const Activation = () => {
   const handleAdd = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      const res = await fetch('https://dev-api.xsmartagrichain.site/v1/devices', {
+      const res = await fetch('http://localhost:5000/v1/devices', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,12 +101,20 @@ const Activation = () => {
       if (!res.ok) throw new Error(result.message || 'Gagal menambahkan perangkat');
       setNotification(result.message);
       setTimeout(() => setNotification(null), 3000);
-      // refresh
-      const updated = await fetch('https://dev-api.xsmartagrichain.site/v1/devices', {
+
+      // refresh data dan urutkan
+      const updated = await fetch('http://localhost:5000/v1/devices', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const updatedJson = await updated.json();
-      setData(updatedJson.data.devices);
+      const updatedDevices = updatedJson.data.devices.map(device => ({
+        id: device.id,
+        rentalId: device.rental_id || '-',
+        status: device.status,
+        lastIssue: device.last_reported_issue || '-',
+        lastActive: device.last_active || '-',
+      }));
+      setData(sortByLastActive(updatedDevices));
     } catch (err) {
       setNotification(err.message);
       setTimeout(() => setNotification(null), 3000);
@@ -134,7 +153,7 @@ const Activation = () => {
                 <th>Rental ID</th>
                 <th>Status</th>
                 <th>Masalah Terakhir</th>
-                <th>Aktif Terakhir</th>
+                <th>Durasi Aktif</th>
                 {!isUser && <th>Aksi</th>}
               </tr>
             </thead>

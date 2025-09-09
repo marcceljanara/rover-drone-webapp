@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./DetailPengiriman.css";
 import { formatTanggalDanWaktuIndonesia } from "../../utils/datetimeIndonesia";
 
-const BASE = "https://dev-api.xsmartagrichain.site";
+const BASE = "http://localhost:5000";
 
 export default function DetailPengiriman() {
   const { rentalId } = useParams();     // ← param di <Route path="/pengiriman/:rentalId" ... />
@@ -35,7 +35,7 @@ export default function DetailPengiriman() {
     try {
       setError("");
       const res  = await fetch(
-        `https://dev-api.xsmartagrichain.site/v1/shipments/${rentalId}`,
+        `hhttp://localhost:5000/v1/shipments/${rentalId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const json = await res.json();
@@ -62,7 +62,7 @@ export default function DetailPengiriman() {
   const handleInfoSave = async () => {
     try {
       const res = await fetch(
-        `https://dev-api.xsmartagrichain.site/v1/shipments/${shipmentId}/info`,
+        `http://localhost:5000/v1/shipments/${shipmentId}/info`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
@@ -80,7 +80,7 @@ export default function DetailPengiriman() {
   const handleStatusSave = async () => {
     try {
       const res = await fetch(
-        `https://dev-api.xsmartagrichain.site/v1/shipments/${shipmentId}/status`,
+        `http://localhost:5000/v1/shipments/${shipmentId}/status`,
         {
           method: "PATCH",
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
@@ -100,7 +100,7 @@ export default function DetailPengiriman() {
     const now = new Date().toISOString().slice(0,19).replace("T"," ");
     try {
       const res = await fetch(
-        `https://dev-api.xsmartagrichain.site/v1/shipments/${shipmentId}/actual-shipping`,
+        `http://localhost:5000/v1/shipments/${shipmentId}/actual-shipping`,
         {
           method: "PATCH",
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
@@ -119,7 +119,7 @@ export default function DetailPengiriman() {
     const now = new Date().toISOString().slice(0,19).replace("T"," ");
     try {
       const res = await fetch(
-        `https://dev-api.xsmartagrichain.site/v1/shipments/${shipmentId}/actual-delivery`,
+        `http://localhost:5000/v1/shipments/${shipmentId}/actual-delivery`,
         {
           method: "PATCH",
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
@@ -146,7 +146,7 @@ export default function DetailPengiriman() {
   try {
     setUploading(true);
     const res = await fetch(
-      `https://dev-api.xsmartagrichain.site/v1/shipments/${shipmentId}/delivery-proof`,
+      `http://localhost:5000/v1/shipments/${shipmentId}/delivery-proof`,
       {
         method: "POST",
         headers: {

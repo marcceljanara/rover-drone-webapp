@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./DetailPengembalian.css";
 import { formatTanggalDanWaktuIndonesia } from "../../utils/datetimeIndonesia";
 
-const API_RETURNS   = "https://dev-api.xsmartagrichain.site/v1/returns";
-const API_ADDRESSES = "https://dev-api.xsmartagrichain.site/v1/users/addresses";
+const API_RETURNS   = "http://localhost:5000/v1/returns";
+const API_ADDRESSES = "http://localhost:5000/v1/users/addresses";
 
 export default function DetailReturnsUser() {
   const { id } = useParams();

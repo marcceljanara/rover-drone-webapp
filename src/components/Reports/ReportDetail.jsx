@@ -14,7 +14,7 @@ const ReportDetail = () => {
     const fetchReportDetail = async () => {
       const accessToken = localStorage.getItem('accessToken');
       try {
-        const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/reports/${id}`, {
+        const response = await fetch(`http://localhost:5000/v1/reports/${id}`, {
           method: 'GET',
           headers: { Authorization: `Bearer ${accessToken}` },
         });
@@ -38,7 +38,7 @@ const ReportDetail = () => {
 
   const handleDownload = () => {
     const accessToken = localStorage.getItem('accessToken');
-    const downloadUrl = `https://dev-api.xsmartagrichain.site/v1/reports/${id}/download`;
+    const downloadUrl = `http://localhost:5000/v1/reports/${id}/download`;
 
     fetch(downloadUrl, {
       headers: { Authorization: `Bearer ${accessToken}` },

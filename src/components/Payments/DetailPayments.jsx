@@ -14,7 +14,7 @@ const DetailPembayaran = () => {
     const fetchDetail = async () => {
       try {
         const accessToken = localStorage.getItem('accessToken');
-        const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/payments/${id}`, {
+        const response = await fetch(`http://localhost:5000/v1/payments/${id}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -35,7 +35,7 @@ const DetailPembayaran = () => {
   const handleDelete = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/payments/${id}`, {
+      const response = await fetch(`http://localhost:5000/v1/payments/${id}`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${accessToken}`,
